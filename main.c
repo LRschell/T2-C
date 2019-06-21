@@ -67,16 +67,38 @@ void bubbleSort(NODO* vet[], int count)
     }
 }
 
-void mostrar(NODO* arv)
+
+void padding ( char ch, int n )
 {
-    if (arv == NULL)
-        return;
+    int i;
 
-    mostrar(arv->esq);
-    printf("%d ", arv->letra);
-    mostrar(arv->dir);
-
+    for ( i = 0; i < n; i++ )
+        putchar ( ch );
 }
+
+
+int busca(NODO* root, char target)
+{
+    if(root == NULL)
+    {
+        return 0;
+    }
+    if(root->letra == target)
+    {
+        return 1;
+    }
+    int buscaE = busca(root->esq, target);
+    if(buscaE == 1){
+        return 1;
+    }
+    int buscaD = busca(root->dir, target);
+    if(buscaD == 1){
+        return 1;
+    }
+    return 0;
+}
+
+
 
 int main()
 {
@@ -102,9 +124,11 @@ int main()
             count++;
         }
     }
-
+    char vet[count];
+    memset(vet, 0, sizeof vet);
     int qvar = 0;
-    NODO* raiz[256] = {NULL};
+    NODO* raiz[count];
+    memset(raiz, NULL, sizeof raiz);
     for(int i = 0; i < 256; i++)
     {
         if(vetor[i] > 0)
@@ -117,6 +141,10 @@ int main()
     }
 
     bubbleSort(raiz, count);
+    for (int i = 0; i < count; i++)
+    {
+        vet[i] = raiz[i]->letra;
+    }
 
 
 
@@ -140,6 +168,8 @@ int main()
     }
 
     printf("\n\n\nValor final: %d", raiz[0]->valor);
+    
+    printf("\nE AGORA: %d", busca(raiz,'a'));
 
 
     fclose(arq);
