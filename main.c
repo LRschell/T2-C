@@ -74,26 +74,30 @@ void padding ( char ch, int n )
         putchar ( ch );
 }
 
-void printree( NODO* root, int level ){ //char** table, char* binary, int column
+void printree( NODO* root, int level )  //char** table, char* binary, int column
+{
     int i;
     // Change to test for leaf
-    if(root == NULL) {
+    if(root == NULL)
+    {
         // table[column] = &node->letter;
         // table[column+1] = binary;
         // column = column + 2;
         padding ('\t', level);
         puts ("~");
-    } else {
+    }
+    else
+    {
         printree(root->dir, level + 1 );
         // RIGHT
-            // strcat(binary, "1");
-            // gentable(node->right, table, binary, column);
+        // strcat(binary, "1");
+        // gentable(node->right, table, binary, column);
         padding('\t', level );
         printf("%c:%d\n", root->letra, root->valor);
         printree(root->esq, level + 1 );
         // LEFT
-            // strcat(binary, "0");
-            // gentable(node->left, table, binary, column);
+        // strcat(binary, "0");
+        // gentable(node->left, table, binary, column);
     }
 }
 
@@ -133,21 +137,26 @@ int main()
         exit(EXIT_FAILURE);
     }
     rewind(arq);
-
     char c;
-    int vetor[256] = {0};
+    int vetor[1256] = {0};
     int count = 0;
-    char msg[256];
+    char msgTemp[1256];
     int cont = 0;
     while ((c = fgetc(arq)) != EOF)
     {
-        msg[cont] = c;
+        msgTemp[cont] = c;
         cont++;
         vetor[c]++;
         if(vetor[c] == 1)
         {
             count++;
         }
+    }
+
+    char msg[cont];
+    for(int i = 0; i < cont; i++)
+    {
+        msg[i] = msgTemp[i];
     }
 
     char vet[count];
@@ -182,21 +191,26 @@ int main()
         bubbleSort(raiz, i);
     }
 
+    FILE * fp;
+    fp = fopen ("saida.piz","w");
+
     for(int i = 0; i < count; i++)
     {
         char path[] = {0};
         busca(*raiz,vet[i], path);
-        printf("\nLetra: %c\tCodigo: %s", vet[i],strrev(path));
-
+        printf("Letra: %c\tCodigo: %s\n", vet[i],strrev(path));
+        fprintf(fp,"Letra: %c\tCodigo: %s\n", vet[i],path);
     }
-    printf("\nMensagem depois: ");
+
+    fprintf(fp,"Mensagem depois: ");
     for(int i = 0; i < cont; i++)
     {
         char path[] = {0};
         busca(*raiz, msg[i], path);
-        printf("%s ", strrev(path));
+        fprintf(fp,"%s", strrev(path));
     }
 
+    fclose (fp);
     fclose(arq);
     return 0;
 }
