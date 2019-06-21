@@ -162,7 +162,7 @@ int main()
     }
 
     //printa a mensagem compactada
-    fprintf(fp,"Mensagem depois: ");
+    fprintf(fp,"Mensagem comprimida: ");
     printf("Mensagem comprimida: ");
     for(int i = 0; i < cont; i++)
     {
