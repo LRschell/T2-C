@@ -137,9 +137,12 @@ int main()
     char c;
     int vetor[256] = {0};
     int count = 0;
-
+    char msg[256];
+    int cont = 0;
     while ((c = fgetc(arq)) != EOF)
     {
+        msg[cont] = c;
+        cont++;
         vetor[c]++;
         if(vetor[c] == 1)
         {
@@ -184,9 +187,16 @@ int main()
         char path[] = {0};
         busca(*raiz,vet[i], path);
         printf("\nLetra: %c\tCodigo: %s", vet[i],strrev(path));
+
     }
-    printf("\n");
-    printree(raiz[0],0);
+    printf("\nMensagem depois: ");
+    for(int i = 0; i < cont; i++)
+    {
+        char path[] = {0};
+        busca(*raiz, msg[i], path);
+        printf("%s ", strrev(path));
+    }
+
     fclose(arq);
     return 0;
 }
