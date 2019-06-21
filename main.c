@@ -13,13 +13,14 @@ typedef struct Node NODO;
 void inserir(NODO** arv, int val, char let);
 NODO* pesquisar(NODO* arv, int val);
 
+//insere um nodo na arvore
 void inserir(NODO** arv, int val, char let)
 {
     if ( *arv == NULL )
     {
         NODO* novo;
         novo = malloc(sizeof(NODO));
-        novo->valor = val;   //(*novo).valor = val;
+        novo->valor = val;
         novo->esq = NULL;
         novo->dir = NULL;
         novo->letra = let;
@@ -28,28 +29,14 @@ void inserir(NODO** arv, int val, char let)
     }
     else
     {
-        //if ( val < (**arv)valor)
         if ( val < (*arv)->valor)
-            //inserir(&((**arv).esq),val);
             inserir(&((*arv)->esq), val, let);
         else
             inserir(&((*arv)->dir), val, let);
     }
 }
 
-NODO* pesquisar(NODO* arv, int val)
-{
-    if ( arv ==NULL)
-        return NULL;
-
-    if ( arv->valor == val)
-        return arv;
-    else if ( arv->valor > val)
-        return pesquisar(arv->esq, val);
-    else
-        return pesquisar(arv->dir, val);
-}
-
+//ordena o vetor do maior valor para o menor
 void bubbleSort(NODO* vet[], int count)
 {
     for (int i = 0; i < count; i++)
@@ -66,41 +53,7 @@ void bubbleSort(NODO* vet[], int count)
     }
 }
 
-void padding ( char ch, int n )
-{
-    int i;
-
-    for ( i = 0; i < n; i++ )
-        putchar ( ch );
-}
-
-void printree( NODO* root, int level )  //char** table, char* binary, int column
-{
-    int i;
-    // Change to test for leaf
-    if(root == NULL)
-    {
-        // table[column] = &node->letter;
-        // table[column+1] = binary;
-        // column = column + 2;
-        padding ('\t', level);
-        puts ("~");
-    }
-    else
-    {
-        printree(root->dir, level + 1 );
-        // RIGHT
-        // strcat(binary, "1");
-        // gentable(node->right, table, binary, column);
-        padding('\t', level );
-        printf("%c:%d\n", root->letra, root->valor);
-        printree(root->esq, level + 1 );
-        // LEFT
-        // strcat(binary, "0");
-        // gentable(node->left, table, binary, column);
-    }
-}
-
+//procura o char na arvore e altera o path com o caminho ate o char
 int busca(NODO* root, char target, char path[])
 {
     if(root == NULL)
@@ -127,7 +80,6 @@ int busca(NODO* root, char target, char path[])
 }
 
 
-
 int main()
 {
     FILE* arq = fopen("teste.txt", "r");
@@ -142,6 +94,8 @@ int main()
     int count = 0;
     char msgTemp[1256];
     int cont = 0;
+
+    //leitura da mensagem e da frequencia
     while ((c = fgetc(arq)) != EOF)
     {
         msgTemp[cont] = c;
@@ -153,6 +107,7 @@ int main()
         }
     }
 
+    //cria uma copia da mensagem
     char msg[cont];
     for(int i = 0; i < cont; i++)
     {
@@ -165,22 +120,25 @@ int main()
     NODO* raiz[count];
     memset(raiz, NULL, sizeof raiz);
 
+    //insere em um vetor de arvore um nodo contendo o char e a frequencia
     for(int i = 0; i < 256; i++)
     {
         if(vetor[i] > 0)
         {
             inserir(&raiz[qvar], vetor[i], i);
             qvar++;
-            //printf("%c: %d\n",i,vetor[i]);
+            printf("%c: %d\n",i,vetor[i]);
         }
     }
 
+    //cria um vetor com as letras da mensagem
     bubbleSort(raiz, count);
     for (int i = 0; i < count; i++)
     {
         vet[i] = raiz[i]->letra;
     }
 
+    //cria um nodo com a soma dos valores de i e i-1, guarda na posicao i-1 e ordena
     for(int i = count-1; i > 0; i--)
     {
         NODO* x = NULL;
@@ -194,6 +152,7 @@ int main()
     FILE * fp;
     fp = fopen ("saida.piz","w");
 
+    //printa a tabela de codigo para cada letra
     for(int i = 0; i < count; i++)
     {
         char path[] = {0};
@@ -202,37 +161,18 @@ int main()
         fprintf(fp,"Letra: %c\tCodigo: %s\n", vet[i],path);
     }
 
+    //printa a mensagem compactada
     fprintf(fp,"Mensagem depois: ");
+    printf("Mensagem comprimida: ");
     for(int i = 0; i < cont; i++)
     {
         char path[] = {0};
         busca(*raiz, msg[i], path);
         fprintf(fp,"%s", strrev(path));
+        printf("%s", path);
     }
 
     fclose (fp);
     fclose(arq);
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
