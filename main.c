@@ -10,7 +10,6 @@ struct Node
 
 typedef struct Node NODO;
 
-// prototipos
 void inserir(NODO** arv, int val, char let);
 NODO* pesquisar(NODO* arv, int val);
 
@@ -67,7 +66,6 @@ void bubbleSort(NODO* vet[], int count)
     }
 }
 
-
 void padding ( char ch, int n )
 {
     int i;
@@ -76,6 +74,28 @@ void padding ( char ch, int n )
         putchar ( ch );
 }
 
+void printree( NODO* root, int level ){ //char** table, char* binary, int column
+    int i;
+    // Change to test for leaf
+    if(root == NULL) {
+        // table[column] = &node->letter;
+        // table[column+1] = binary;
+        // column = column + 2;
+        padding ('\t', level);
+        puts ("~");
+    } else {
+        printree(root->dir, level + 1 );
+        // RIGHT
+            // strcat(binary, "1");
+            // gentable(node->right, table, binary, column);
+        padding('\t', level );
+        printf("%c:%d\n", root->letra, root->valor);
+        printree(root->esq, level + 1 );
+        // LEFT
+            // strcat(binary, "0");
+            // gentable(node->left, table, binary, column);
+    }
+}
 
 int busca(NODO* root, char target, char path[])
 {
@@ -112,11 +132,9 @@ int main()
         printf("Erro! Arquivo não encontrado!\n");
         exit(EXIT_FAILURE);
     }
-    // Leitura
+    rewind(arq);
+
     char c;
-
-    rewind(arq); // volta ao início do arquivo
-
     int vetor[256] = {0};
     int count = 0;
 
@@ -128,19 +146,20 @@ int main()
             count++;
         }
     }
+
     char vet[count];
     memset(vet, 0, sizeof vet);
     int qvar = 0;
     NODO* raiz[count];
     memset(raiz, NULL, sizeof raiz);
+
     for(int i = 0; i < 256; i++)
     {
         if(vetor[i] > 0)
         {
             inserir(&raiz[qvar], vetor[i], i);
             qvar++;
-            printf("%c: %d\n",i,vetor[i]);
-
+            //printf("%c: %d\n",i,vetor[i]);
         }
     }
 
@@ -149,17 +168,6 @@ int main()
     {
         vet[i] = raiz[i]->letra;
     }
-
-
-
-    printf("\nVetor ordenado: ");
-    for (int i = 0; i < count; i++)
-    {
-        printf(" %c ", raiz[i]->letra);
-    }
-
-    printf("\nCount: %d",count);
-
 
     for(int i = count-1; i > 0; i--)
     {
@@ -171,19 +179,14 @@ int main()
         bubbleSort(raiz, i);
     }
 
-    printf("\n\n\nValor final: %c", raiz[0]->esq->dir->letra);
-
-    char path[] = {0};
-    printf("\nE AGORA: %d\t%s", busca(*raiz,'e', path),path);
-    strrev(path);
-    printf("\nFIM: %s", path);
-
-    for(int i = 0; i < count; i++){
+    for(int i = 0; i < count; i++)
+    {
         char path[] = {0};
         busca(*raiz,vet[i], path);
         printf("\nLetra: %c\tCodigo: %s", vet[i],strrev(path));
     }
-
+    printf("\n");
+    printree(raiz[0],0);
     fclose(arq);
     return 0;
 }
