@@ -77,7 +77,7 @@ void padding ( char ch, int n )
 }
 
 
-int busca(NODO* root, char target)
+int busca(NODO* root, char target, char path[])
 {
     if(root == NULL)
     {
@@ -87,12 +87,16 @@ int busca(NODO* root, char target)
     {
         return 1;
     }
-    int buscaE = busca(root->esq, target);
-    if(buscaE == 1){
+    int buscaE = busca(root->esq, target, path);
+    if(buscaE == 1)
+    {
+        strcat(path, "0");
         return 1;
     }
-    int buscaD = busca(root->dir, target);
-    if(buscaD == 1){
+    int buscaD = busca(root->dir, target, path);
+    if(buscaD == 1)
+    {
+        strcat(path, "1");
         return 1;
     }
     return 0;
@@ -167,10 +171,18 @@ int main()
         bubbleSort(raiz, i);
     }
 
-    printf("\n\n\nValor final: %d", raiz[0]->valor);
-    
-    printf("\nE AGORA: %d", busca(raiz,'a'));
+    printf("\n\n\nValor final: %c", raiz[0]->esq->dir->letra);
 
+    char path[] = {0};
+    printf("\nE AGORA: %d\t%s", busca(*raiz,'e', path),path);
+    strrev(path);
+    printf("\nFIM: %s", path);
+
+    for(int i = 0; i < count; i++){
+        char path[] = {0};
+        busca(*raiz,vet[i], path);
+        printf("\nLetra: %c\tCodigo: %s", vet[i],strrev(path));
+    }
 
     fclose(arq);
     return 0;
